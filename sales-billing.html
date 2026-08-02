@@ -10,230 +10,89 @@
             --secondary: #1e40af;
             --success: #16a34a;
             --danger: #dc2626;
+            --warning: #b45309;
             --background: #f3f4f6;
             --card: #ffffff;
             --text: #1f2937;
             --border: #e5e7eb;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
 
-        body {
-            background-color: var(--background);
-            color: var(--text);
-            line-height: 1.6;
-            padding: 20px;
-        }
+        body { background-color: var(--background); color: var(--text); line-height: 1.6; padding: 20px; }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
+        .container { max-width: 1200px; margin: 0 auto; }
 
-        header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
+        header { text-align: center; margin-bottom: 30px; }
+        h1 { color: var(--primary); margin-bottom: 10px; }
 
-        h1 {
-            color: var(--primary);
-            margin-bottom: 10px;
-        }
+        .dashboard { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; }
+        @media (max-width: 768px) { .dashboard { grid-template-columns: 1fr; } }
 
-        .dashboard {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 30px;
-        }
+        .card { background: var(--card); padding: 25px; border-radius: 10px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); margin-bottom: 24px; }
 
-        @media (max-width: 768px) {
-            .dashboard {
-                grid-template-columns: 1fr;
-            }
-        }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.9rem; }
+        input, select, textarea { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 1rem; transition: border-color 0.2s; }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary); }
 
-        .card {
-            background: var(--card);
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        }
+        .row { display: flex; gap: 15px; }
+        .col { flex: 1; }
 
-        .form-group {
-            margin-bottom: 15px;
-        }
+        .btn { padding: 10px 18px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; transition: opacity 0.2s; text-align: center; display: inline-block; font-size: 0.95rem; }
+        .btn:hover { opacity: 0.88; }
+        .btn-primary { background-color: var(--primary); color: white; width: 100%; font-size: 1.05rem; }
+        .btn-success { background-color: var(--success); color: white; }
+        .btn-danger  { background-color: var(--danger); color: white; padding: 5px 10px; font-size: 0.8rem; }
+        .btn-warning { background-color: var(--warning); color: white; }
+        .btn-gray    { background-color: #6b7280; color: white; }
+        .btn-sm      { padding: 4px 10px; font-size: 0.8rem; }
 
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
+        /* Payment type toggle */
+        .payment-toggle { display: flex; gap: 0; border-radius: 8px; overflow: hidden; border: 2px solid var(--border); }
+        .payment-toggle label { flex: 1; text-align: center; padding: 10px; cursor: pointer; font-weight: 600; font-size: 0.95rem; margin: 0; background: #f9fafb; transition: background 0.2s, color 0.2s; }
+        .payment-toggle input[type="radio"] { display: none; }
+        .payment-toggle input[type="radio"]:checked + label.cash-label  { background: var(--success); color: white; }
+        .payment-toggle input[type="radio"]:checked + label.credit-label { background: var(--warning); color: white; }
 
-        input, select, textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            font-size: 1rem;
-            transition: border-color 0.2s;
-        }
+        /* Invoice preview */
+        .invoice-preview { background: #fff; border: 1px solid var(--border); padding: 20px; margin-top: 20px; display: none; }
+        .invoice-header { display: flex; justify-content: space-between; border-bottom: 2px solid var(--primary); padding-bottom: 15px; margin-bottom: 15px; }
+        .invoice-details { margin-bottom: 15px; }
+        .totals-table { width: 100%; margin-top: 15px; border-collapse: collapse; }
+        .totals-table td { padding: 8px; text-align: right; }
+        .totals-table tr.total-row { font-weight: bold; font-size: 1.2rem; background-color: #f0f9ff; }
 
-        input:focus, select:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; background: white; border-radius: 8px; overflow: hidden; }
+        th, td { padding: 11px 14px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+        th { background-color: var(--primary); color: white; }
+        tr:hover { background-color: #f9fafb; }
 
-        .row {
-            display: flex;
-            gap: 15px;
-        }
+        .actions { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; align-items: center; }
+        .date-filter { margin-left: auto; display: flex; align-items: center; gap: 8px; }
 
-        .col {
-            flex: 1;
-        }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .stat-card { background: white; padding: 15px; border-radius: 8px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .stat-value { font-size: 1.5rem; font-weight: bold; color: var(--primary); }
+        .stat-value.red { color: var(--danger); }
+        .stat-label { font-size: 0.85rem; color: #6b7280; }
 
-        .btn {
-            padding: 12px 20px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: opacity 0.2s;
-            text-align: center;
-            display: inline-block;
-        }
+        .badge { display: inline-block; padding: 2px 9px; border-radius: 12px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; }
+        .badge-cash   { background: #dcfce7; color: #16a34a; }
+        .badge-credit { background: #fef3c7; color: #b45309; }
+        .badge-open   { background: #fee2e2; color: #dc2626; }
+        .badge-paid   { background: #dcfce7; color: #16a34a; }
 
-        .btn:hover {
-            opacity: 0.9;
-        }
+        .tabs { display: flex; gap: 4px; margin-bottom: 0; border-bottom: 2px solid var(--border); }
+        .tab-btn { padding: 10px 20px; border: none; background: none; cursor: pointer; font-weight: 600; font-size: 0.95rem; color: #6b7280; border-bottom: 3px solid transparent; margin-bottom: -2px; transition: color 0.2s, border-color 0.2s; }
+        .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
+        .tab-pane { display: none; padding-top: 16px; }
+        .tab-pane.active { display: block; }
 
-        .btn-primary {
-            background-color: var(--primary);
-            color: white;
-            width: 100%;
-            font-size: 1.1rem;
-        }
+        .hidden { display: none; }
+        #noRecordsMsg, #noArMsg { text-align: center; padding: 20px; color: #666; display: none; }
 
-        .btn-success {
-            background-color: var(--success);
-            color: white;
-        }
-
-        .btn-danger {
-            background-color: var(--danger);
-            color: white;
-            padding: 5px 10px;
-            font-size: 0.8rem;
-        }
-
-        .invoice-preview {
-            background: #fff;
-            border: 1px solid var(--border);
-            padding: 20px;
-            margin-top: 20px;
-            display: none;
-        }
-
-        .invoice-header {
-            display: flex;
-            justify-content: space-between;
-            border-bottom: 2px solid var(--primary);
-            padding-bottom: 15px;
-            margin-bottom: 15px;
-        }
-
-        .invoice-details {
-            margin-bottom: 15px;
-        }
-
-        .totals-table {
-            width: 100%;
-            margin-top: 15px;
-            border-collapse: collapse;
-        }
-
-        .totals-table td {
-            padding: 8px;
-            text-align: right;
-        }
-
-        .totals-table tr.total-row {
-            font-weight: bold;
-            font-size: 1.2rem;
-            background-color: #f0f9ff;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            background: white;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        th, td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid var(--border);
-        }
-
-        th {
-            background-color: var(--primary);
-            color: white;
-        }
-
-        tr:hover {
-            background-color: #f9fafb;
-        }
-
-        .actions {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
-        }
-
-        .date-filter {
-            margin-left: auto;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .stat-card {
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            text-align: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-
-        .stat-value {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--primary);
-        }
-
-        .stat-label {
-            font-size: 0.85rem;
-            color: #6b7280;
-        }
-
-        .hidden {
-            display: none;
-        }
+        .export-row { display: flex; gap: 10px; flex-wrap: wrap; }
     </style>
 </head>
 <body>
@@ -241,7 +100,7 @@
 <div class="container">
     <header>
         <h1>Sales Billing System</h1>
-        <p>Create invoices and manage daily sales records</p>
+        <p>Create invoices · track cash payments · manage receivables</p>
     </header>
 
     <!-- Statistics -->
@@ -258,6 +117,10 @@
             <div class="stat-value" id="totalRecords">0</div>
             <div class="stat-label">Total Records</div>
         </div>
+        <div class="stat-card">
+            <div class="stat-value red" id="openAR">$0.00</div>
+            <div class="stat-label">Open Receivables (<span id="openARCount">0</span>)</div>
+        </div>
     </div>
 
     <div class="dashboard">
@@ -265,6 +128,17 @@
         <div class="card">
             <h2 style="margin-bottom: 20px;">New Invoice</h2>
             <form id="billingForm">
+                <!-- Payment Type -->
+                <div class="form-group">
+                    <label>Payment Type</label>
+                    <div class="payment-toggle">
+                        <input type="radio" name="paymentType" id="ptCash" value="cash" checked>
+                        <label for="ptCash" class="cash-label">💵 Cash</label>
+                        <input type="radio" name="paymentType" id="ptCredit" value="credit">
+                        <label for="ptCredit" class="credit-label">📋 Credit (A/R)</label>
+                    </div>
+                </div>
+
                 <div class="row">
                     <div class="col form-group">
                         <label for="invoiceDate">Date</label>
@@ -283,7 +157,7 @@
 
                 <div class="row">
                     <div class="col form-group">
-                        <label for="productName">Product/Service</label>
+                        <label for="productName">Product / Service</label>
                         <input type="text" id="productName" placeholder="Item name" required>
                     </div>
                     <div class="col form-group">
@@ -304,7 +178,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="discount">Discount Amount ($)</label>
+                    <label for="discount">Discount ($)</label>
                     <input type="number" id="discount" min="0" step="0.01" value="0" placeholder="0.00">
                 </div>
 
@@ -313,7 +187,7 @@
                     <textarea id="notes" rows="2" placeholder="Payment terms, delivery info, etc."></textarea>
                 </div>
 
-                <button type="submit" class="btn btn-primary">Generate & Save Invoice</button>
+                <button type="submit" class="btn btn-primary" id="submitBtn">💵 Save Cash Invoice</button>
             </form>
         </div>
 
@@ -325,122 +199,143 @@
                     <div>
                         <h3 style="color: var(--primary);">INVOICE</h3>
                         <p id="prevInvNo" style="font-weight: bold;"></p>
+                        <p id="prevPaymentBadge"></p>
                     </div>
                     <div style="text-align: right;">
                         <p id="prevDate"></p>
                     </div>
                 </div>
-                
                 <div class="invoice-details">
                     <p><strong>Bill To:</strong> <span id="prevCustomer"></span></p>
                 </div>
-
                 <table style="margin-top: 0; border: 1px solid #eee;">
                     <thead>
                         <tr>
                             <th>Description</th>
-                            <th style="text-align: center;">Qty</th>
-                            <th style="text-align: right;">Price</th>
-                            <th style="text-align: right;">Total</th>
+                            <th style="text-align:center">Qty</th>
+                            <th style="text-align:right">Price</th>
+                            <th style="text-align:right">Total</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <td id="prevItem"></td>
-                            <td style="text-align: center;" id="prevQty"></td>
-                            <td style="text-align: right;" id="prevPrice"></td>
-                            <td style="text-align: right;" id="prevSubtotal"></td>
+                            <td style="text-align:center" id="prevQty"></td>
+                            <td style="text-align:right" id="prevPrice"></td>
+                            <td style="text-align:right" id="prevSubtotal"></td>
                         </tr>
                     </tbody>
                 </table>
-
                 <table class="totals-table">
-                    <tr>
-                        <td>Subtotal:</td>
-                        <td id="prevSubtotalLabel">$0.00</td>
-                    </tr>
-                    <tr>
-                        <td>Tax (<span id="prevTaxRate">0</span>%):</td>
-                        <td id="prevTaxAmount">$0.00</td>
-                    </tr>
-                    <tr>
-                        <td>Discount:</td>
-                        <td id="prevDiscount">-$0.00</td>
-                    </tr>
-                    <tr class="total-row">
-                        <td>Grand Total:</td>
-                        <td id="prevGrandTotal">$0.00</td>
-                    </tr>
+                    <tr><td>Subtotal:</td><td id="prevSubtotalLabel">$0.00</td></tr>
+                    <tr><td>Tax (<span id="prevTaxRate">0</span>%):</td><td id="prevTaxAmount">$0.00</td></tr>
+                    <tr><td>Discount:</td><td id="prevDiscount">-$0.00</td></tr>
+                    <tr class="total-row"><td>Grand Total:</td><td id="prevGrandTotal">$0.00</td></tr>
                 </table>
-                
-                <div style="margin-top: 20px; font-size: 0.9rem; color: #666;">
+                <div style="margin-top:16px; font-size:0.9rem; color:#666">
                     <p><strong>Notes:</strong> <span id="prevNotes">None</span></p>
                 </div>
             </div>
-            <div id="emptyPreview" style="text-align: center; color: #9ca3af; padding: 40px;">
+            <div id="emptyPreview" style="text-align:center; color:#9ca3af; padding:40px">
                 Fill out the form to see invoice preview
             </div>
         </div>
     </div>
 
-    <!-- Records Section -->
+    <!-- Records & Receivables (tabbed) -->
     <div class="card">
-        <div class="actions">
-            <h2>Sales Records</h2>
-            <div class="date-filter">
-                <label for="filterDate" style="display:inline; margin-right: 10px;">Filter by Date:</label>
-                <input type="date" id="filterDate" style="width: auto; display: inline-block;">
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('sales')">Sales Records</button>
+            <button class="tab-btn" onclick="switchTab('ar')">Accounts Receivable</button>
+        </div>
+
+        <!-- Sales Records tab -->
+        <div class="tab-pane active" id="tab-sales">
+            <div class="actions">
+                <div class="date-filter">
+                    <label for="filterDate">Filter by Date:</label>
+                    <input type="date" id="filterDate" style="width:auto;">
+                </div>
+                <div class="export-row" style="margin-left:auto">
+                    <button onclick="downloadExcel()" class="btn btn-success">⬇ Export Day (.xlsx)</button>
+                    <button onclick="downloadBookkeeping()" class="btn btn-warning">📒 Full Bookkeeping Workbook</button>
+                    <button onclick="resetAllData()" class="btn btn-gray">Reset All</button>
+                </div>
             </div>
-            <button onclick="downloadExcel()" class="btn btn-success">Download Excel (.xlsx)</button>
-            <button onclick="resetAllData()" class="btn btn-danger" style="background-color: #6b7280;">Reset All</button>
+            <div style="overflow-x:auto">
+                <table id="recordsTable">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Invoice No</th>
+                            <th>Customer</th>
+                            <th>Item</th>
+                            <th>Qty</th>
+                            <th>Unit Price</th>
+                            <th>Tax</th>
+                            <th>Discount</th>
+                            <th>Grand Total</th>
+                            <th>Payment</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recordsBody"></tbody>
+                </table>
+            </div>
+            <p id="noRecordsMsg">No records found for this date.</p>
         </div>
-        
-        <div style="overflow-x: auto;">
-            <table id="recordsTable">
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Invoice No</th>
-                        <th>Customer</th>
-                        <th>Item</th>
-                        <th>Qty</th>
-                        <th>Unit Price</th>
-                        <th>Tax</th>
-                        <th>Discount</th>
-                        <th>Grand Total</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody id="recordsBody">
-                    <!-- Records will be inserted here -->
-                </tbody>
-            </table>
+
+        <!-- Accounts Receivable tab -->
+        <div class="tab-pane" id="tab-ar">
+            <div class="actions">
+                <span style="color:#6b7280; font-size:0.9rem">All credit invoices — mark as paid when collected</span>
+                <button onclick="downloadBookkeeping()" class="btn btn-warning" style="margin-left:auto">📒 Full Bookkeeping Workbook</button>
+            </div>
+            <div style="overflow-x:auto">
+                <table id="arTable">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Invoice No</th>
+                            <th>Customer</th>
+                            <th>Item</th>
+                            <th>Grand Total</th>
+                            <th>Status</th>
+                            <th>Notes</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="arBody"></tbody>
+                </table>
+            </div>
+            <p id="noArMsg">No credit invoices found.</p>
         </div>
-        <p id="noRecordsMsg" style="text-align: center; padding: 20px; color: #666; display: none;">No records found for this date.</p>
     </div>
 </div>
 
 <script>
-    // State
     let salesRecords = [];
 
-    // Initialize
     document.addEventListener('DOMContentLoaded', () => {
         const today = new Date().toISOString().split('T')[0];
         document.getElementById('invoiceDate').value = today;
         document.getElementById('filterDate').value = today;
-
-        // Set a default invoice number if empty
         document.getElementById('invoiceNo').value = 'INV-' + Math.floor(1000 + Math.random() * 9000);
 
         fetchRecords(today);
+        fetchReceivables();
         setupFormListeners();
     });
 
     function setupFormListeners() {
-        const inputs = ['invoiceNo', 'invoiceDate', 'customerName', 'productName', 'quantity', 'unitPrice', 'taxRate', 'discount', 'notes'];
-        inputs.forEach(id => {
-            document.getElementById(id).addEventListener('input', updatePreview);
+        const inputs = ['invoiceNo','invoiceDate','customerName','productName','quantity','unitPrice','taxRate','discount','notes'];
+        inputs.forEach(id => document.getElementById(id).addEventListener('input', updatePreview));
+
+        document.querySelectorAll('input[name="paymentType"]').forEach(el => {
+            el.addEventListener('change', () => {
+                updateSubmitButton();
+                updatePreview();
+            });
         });
 
         document.getElementById('filterDate').addEventListener('change', () => {
@@ -453,84 +348,101 @@
         });
     }
 
+    function getPaymentType() {
+        return document.querySelector('input[name="paymentType"]:checked').value;
+    }
+
+    function updateSubmitButton() {
+        const btn = document.getElementById('submitBtn');
+        if (getPaymentType() === 'credit') {
+            btn.textContent = '📋 Save Credit Invoice (A/R)';
+            btn.style.background = 'var(--warning)';
+        } else {
+            btn.textContent = '💵 Save Cash Invoice';
+            btn.style.background = 'var(--primary)';
+        }
+    }
+
+    function fmt(n) { return '$' + Number(n||0).toFixed(2); }
+
     function updatePreview() {
         const invoiceNo = document.getElementById('invoiceNo').value || '---';
-        const date = document.getElementById('invoiceDate').value || '---';
-        const customer = document.getElementById('customerName').value || '---';
-        const item = document.getElementById('productName').value || '---';
-        const qty = parseFloat(document.getElementById('quantity').value) || 0;
-        const price = parseFloat(document.getElementById('unitPrice').value) || 0;
-        const taxRate = parseFloat(document.getElementById('taxRate').value) || 0;
-        const discount = parseFloat(document.getElementById('discount').value) || 0;
-        const notes = document.getElementById('notes').value || 'None';
+        const date      = document.getElementById('invoiceDate').value || '---';
+        const customer  = document.getElementById('customerName').value || '---';
+        const item      = document.getElementById('productName').value || '---';
+        const qty       = parseFloat(document.getElementById('quantity').value) || 0;
+        const price     = parseFloat(document.getElementById('unitPrice').value) || 0;
+        const taxRate   = parseFloat(document.getElementById('taxRate').value) || 0;
+        const discount  = parseFloat(document.getElementById('discount').value) || 0;
+        const notes     = document.getElementById('notes').value || 'None';
+        const pt        = getPaymentType();
 
-        const subtotal = qty * price;
-        const taxAmount = subtotal * (taxRate / 100);
+        const subtotal   = qty * price;
+        const taxAmount  = subtotal * (taxRate / 100);
         const grandTotal = subtotal + taxAmount - discount;
 
         document.getElementById('prevInvNo').textContent = invoiceNo;
-        document.getElementById('prevDate').textContent = date;
+        document.getElementById('prevDate').textContent  = date;
         document.getElementById('prevCustomer').textContent = customer;
-        document.getElementById('prevItem').textContent = item;
-        document.getElementById('prevQty').textContent = qty;
-        document.getElementById('prevPrice').textContent = '$' + price.toFixed(2);
-        document.getElementById('prevSubtotal').textContent = '$' + subtotal.toFixed(2);
-        document.getElementById('prevSubtotalLabel').textContent = '$' + subtotal.toFixed(2);
-        document.getElementById('prevTaxRate').textContent = taxRate;
-        document.getElementById('prevTaxAmount').textContent = '$' + taxAmount.toFixed(2);
-        document.getElementById('prevDiscount').textContent = '-$' + discount.toFixed(2);
-        document.getElementById('prevGrandTotal').textContent = '$' + grandTotal.toFixed(2);
-        document.getElementById('prevNotes').textContent = notes;
+        document.getElementById('prevItem').textContent  = item;
+        document.getElementById('prevQty').textContent   = qty;
+        document.getElementById('prevPrice').textContent = fmt(price);
+        document.getElementById('prevSubtotal').textContent = fmt(subtotal);
+        document.getElementById('prevSubtotalLabel').textContent = fmt(subtotal);
+        document.getElementById('prevTaxRate').textContent  = taxRate;
+        document.getElementById('prevTaxAmount').textContent = fmt(taxAmount);
+        document.getElementById('prevDiscount').textContent = '-' + fmt(discount);
+        document.getElementById('prevGrandTotal').textContent = fmt(grandTotal);
+        document.getElementById('prevNotes').textContent  = notes;
+        document.getElementById('prevPaymentBadge').innerHTML =
+            pt === 'credit'
+                ? '<span class="badge badge-credit">Credit / A/R</span>'
+                : '<span class="badge badge-cash">Cash</span>';
 
-        if(invoiceNo !== '---' || customer !== '---') {
-            document.getElementById('emptyPreview').style.display = 'none';
-            document.getElementById('invoicePreview').style.display = 'block';
-        } else {
-            document.getElementById('emptyPreview').style.display = 'block';
-            document.getElementById('invoicePreview').style.display = 'none';
-        }
+        const hasContent = invoiceNo !== '---' || customer !== '---';
+        document.getElementById('emptyPreview').style.display = hasContent ? 'none' : 'block';
+        document.getElementById('invoicePreview').style.display = hasContent ? 'block' : 'none';
     }
 
     async function fetchRecords(date) {
         try {
             const res = await fetch(`/api/records?date=${encodeURIComponent(date)}`);
-            if (res.ok) {
-                salesRecords = await res.json();
-            } else {
-                salesRecords = [];
-            }
-            renderTable();
-            updateStats();
-        } catch (err) {
-            console.error('Failed to fetch records', err);
-            salesRecords = [];
-            renderTable();
-            updateStats();
-        }
+            salesRecords = res.ok ? await res.json() : [];
+        } catch { salesRecords = []; }
+        renderTable();
+        updateStats();
+    }
+
+    async function fetchReceivables() {
+        try {
+            const res = await fetch('/api/receivables');
+            const rows = res.ok ? await res.json() : [];
+            renderAR(rows);
+        } catch { renderAR([]); }
     }
 
     async function submitForm() {
-        const qty = parseFloat(document.getElementById('quantity').value);
-        const price = parseFloat(document.getElementById('unitPrice').value);
-        const taxRate = parseFloat(document.getElementById('taxRate').value) || 0;
+        const qty      = parseFloat(document.getElementById('quantity').value);
+        const price    = parseFloat(document.getElementById('unitPrice').value);
+        const taxRate  = parseFloat(document.getElementById('taxRate').value) || 0;
         const discount = parseFloat(document.getElementById('discount').value) || 0;
-
         const subtotal = qty * price;
-        const taxAmount = subtotal * (taxRate / 100);
+        const taxAmount  = subtotal * (taxRate / 100);
         const grandTotal = subtotal + taxAmount - discount;
 
         const payload = {
-            date: document.getElementById('invoiceDate').value,
-            invoiceNo: document.getElementById('invoiceNo').value,
-            customer: document.getElementById('customerName').value,
-            item: document.getElementById('productName').value,
-            quantity: qty,
-            unitPrice: price,
-            taxRate: taxRate,
-            taxAmount: taxAmount,
-            discount: discount,
-            grandTotal: grandTotal,
-            notes: document.getElementById('notes').value
+            date:        document.getElementById('invoiceDate').value,
+            invoiceNo:   document.getElementById('invoiceNo').value,
+            customer:    document.getElementById('customerName').value,
+            item:        document.getElementById('productName').value,
+            quantity:    qty,
+            unitPrice:   price,
+            taxRate:     taxRate,
+            taxAmount:   taxAmount,
+            discount:    discount,
+            grandTotal:  grandTotal,
+            notes:       document.getElementById('notes').value,
+            paymentType: getPaymentType()
         };
 
         try {
@@ -540,15 +452,27 @@
                 body: JSON.stringify(payload)
             });
             if (res.ok) {
-                await fetchRecords(document.getElementById('filterDate').value);
-
-                // Reset invoice number and form while keeping date
+                const saved = await res.json();
                 const currentDate = document.getElementById('invoiceDate').value;
-                this.reset && this.reset();
+                document.getElementById('billingForm').reset();
                 document.getElementById('invoiceDate').value = currentDate;
                 document.getElementById('invoiceNo').value = 'INV-' + Math.floor(1000 + Math.random() * 9000);
+                // restore cash as default
+                document.getElementById('ptCash').checked = true;
+                updateSubmitButton();
                 updatePreview();
-                alert('Invoice saved successfully!');
+
+                await Promise.all([
+                    fetchRecords(document.getElementById('filterDate').value),
+                    fetchReceivables()
+                ]);
+
+                if (payload.paymentType === 'credit') {
+                    alert('Credit invoice saved — added to Accounts Receivable.');
+                    switchTab('ar');
+                } else {
+                    alert('Cash invoice saved successfully!');
+                }
             } else {
                 const err = await res.json();
                 alert('Failed to save invoice: ' + (err.error || res.statusText));
@@ -561,48 +485,94 @@
 
     function renderTable() {
         const tbody = document.getElementById('recordsBody');
-        const filterDate = document.getElementById('filterDate').value;
-        const noRecordsMsg = document.getElementById('noRecordsMsg');
-
+        const noMsg = document.getElementById('noRecordsMsg');
         tbody.innerHTML = '';
-
         if (salesRecords.length === 0) {
-            noRecordsMsg.style.display = 'block';
+            noMsg.style.display = 'block';
         } else {
-            noRecordsMsg.style.display = 'none';
-            salesRecords.forEach(record => {
+            noMsg.style.display = 'none';
+            salesRecords.forEach(r => {
                 const row = document.createElement('tr');
+                const ptBadge = (r.paymentType === 'credit')
+                    ? '<span class="badge badge-credit">Credit</span>'
+                    : '<span class="badge badge-cash">Cash</span>';
                 row.innerHTML = `
-                    <td>${record.date}</td>
-                    <td>${record.invoiceNo}</td>
-                    <td>${record.customer}</td>
-                    <td>${record.item}</td>
-                    <td>${record.quantity}</td>
-                    <td>$${Number(record.unitPrice).toFixed(2)}</td>
-                    <td>${record.taxRate}%</td>
-                    <td>$${Number(record.discount).toFixed(2)}</td>
-                    <td><strong>$${Number(record.grandTotal).toFixed(2)}</strong></td>
-                    <td><button class="btn btn-danger" data-id="${record.id}">Delete</button></td>
+                    <td>${r.date}</td>
+                    <td>${r.invoiceNo}</td>
+                    <td>${r.customer}</td>
+                    <td>${r.item}</td>
+                    <td>${r.quantity}</td>
+                    <td>${fmt(r.unitPrice)}</td>
+                    <td>${r.taxRate}%</td>
+                    <td>${fmt(r.discount)}</td>
+                    <td><strong>${fmt(r.grandTotal)}</strong></td>
+                    <td>${ptBadge}</td>
+                    <td><button class="btn btn-danger" data-id="${r.id}">Delete</button></td>
                 `;
-                row.querySelector('button')?.addEventListener('click', () => deleteRecord(record.id));
+                row.querySelector('button').addEventListener('click', () => deleteRecord(r.id));
                 tbody.appendChild(row);
             });
         }
     }
 
+    function renderAR(rows) {
+        const tbody = document.getElementById('arBody');
+        const noMsg = document.getElementById('noArMsg');
+        tbody.innerHTML = '';
+        if (rows.length === 0) {
+            noMsg.style.display = 'block';
+        } else {
+            noMsg.style.display = 'none';
+            rows.forEach(r => {
+                const isPaid = r.receivableStatus === 'paid';
+                const statusBadge = isPaid
+                    ? '<span class="badge badge-paid">Paid</span>'
+                    : '<span class="badge badge-open">Open</span>';
+                const actionBtn = isPaid
+                    ? '<span style="color:#9ca3af; font-size:0.8rem">✔ Collected</span>'
+                    : `<button class="btn btn-success btn-sm" data-id="${r.id}">Mark Paid</button>`;
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${r.date}</td>
+                    <td>${r.invoiceNo}</td>
+                    <td>${r.customer}</td>
+                    <td>${r.item}</td>
+                    <td><strong>${fmt(r.grandTotal)}</strong></td>
+                    <td>${statusBadge}</td>
+                    <td style="font-size:0.85rem; color:#6b7280">${r.notes || '—'}</td>
+                    <td>${actionBtn}</td>
+                `;
+                if (!isPaid) {
+                    row.querySelector('button').addEventListener('click', () => markPaid(r.id));
+                }
+                tbody.appendChild(row);
+            });
+        }
+    }
+
+    async function markPaid(id) {
+        if (!confirm('Mark this invoice as paid / collected?')) return;
+        try {
+            const res = await fetch(`/api/records/${id}/mark-paid`, { method: 'PATCH' });
+            if (res.ok) {
+                await Promise.all([fetchReceivables(), updateStats()]);
+            } else {
+                alert('Failed to update record');
+            }
+        } catch { alert('Network error'); }
+    }
+
     async function deleteRecord(id) {
-        if (!confirm('Are you sure you want to delete this record?')) return;
+        if (!confirm('Delete this record?')) return;
         try {
             const res = await fetch(`/api/records/${id}`, { method: 'DELETE' });
             if (res.ok) {
-                await fetchRecords(document.getElementById('filterDate').value);
-            } else {
-                alert('Failed to delete record');
-            }
-        } catch (err) {
-            console.error(err);
-            alert('Network error deleting record');
-        }
+                await Promise.all([
+                    fetchRecords(document.getElementById('filterDate').value),
+                    fetchReceivables()
+                ]);
+            } else { alert('Failed to delete record'); }
+        } catch { alert('Network error'); }
     }
 
     async function resetAllData() {
@@ -610,15 +580,12 @@
         try {
             const res = await fetch('/api/records?confirm=true', { method: 'DELETE' });
             if (res.ok) {
-                await fetchRecords(document.getElementById('filterDate').value);
-                updateStats();
-            } else {
-                alert('Failed to clear data');
-            }
-        } catch (err) {
-            console.error(err);
-            alert('Network error clearing data');
-        }
+                await Promise.all([
+                    fetchRecords(document.getElementById('filterDate').value),
+                    fetchReceivables()
+                ]);
+            } else { alert('Failed to clear data'); }
+        } catch { alert('Network error'); }
     }
 
     async function updateStats() {
@@ -627,21 +594,31 @@
             const res = await fetch(`/api/stats?date=${encodeURIComponent(filterDate)}`);
             if (res.ok) {
                 const s = await res.json();
-                document.getElementById('todayCount').textContent = s.todayCount;
-                document.getElementById('todayRevenue').textContent = '$' + Number(s.todayTotal).toFixed(2);
-                document.getElementById('totalRecords').textContent = s.totalRecords;
+                document.getElementById('todayCount').textContent    = s.todayCount;
+                document.getElementById('todayRevenue').textContent  = fmt(s.todayTotal);
+                document.getElementById('totalRecords').textContent  = s.totalRecords;
+                document.getElementById('openAR').textContent        = fmt(s.openReceivables);
+                document.getElementById('openARCount').textContent   = s.openReceivablesCount;
             }
-        } catch (err) {
-            console.error('Failed to update stats', err);
-        }
+        } catch { console.error('Failed to update stats'); }
     }
 
     function downloadExcel() {
-        const filterDate = document.getElementById('filterDate').value;
-        // Trigger server export
-        window.location = `/api/export?date=${encodeURIComponent(filterDate)}`;
+        const date = document.getElementById('filterDate').value;
+        window.location = `/api/export?date=${encodeURIComponent(date)}`;
+    }
+
+    function downloadBookkeeping() {
+        window.location = `/api/export?all=true`;
+    }
+
+    function switchTab(name) {
+        document.querySelectorAll('.tab-btn').forEach((b, i) => {
+            b.classList.toggle('active', (i === 0 && name === 'sales') || (i === 1 && name === 'ar'));
+        });
+        document.getElementById('tab-sales').classList.toggle('active', name === 'sales');
+        document.getElementById('tab-ar').classList.toggle('active', name === 'ar');
     }
 </script>
-
 </body>
 </html>
