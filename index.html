@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Better Future Tech ERP - Enterprise Resource Planning</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        /* Navigation */
+        nav {
+            background: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2563eb;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #2563eb;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 100px 20px;
+            text-align: center;
+        }
+
+        .hero .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .hero p {
+            font-size: 20px;
+            margin-bottom: 30px;
+            opacity: 0.95;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: white;
+            color: #667eea;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-secondary:hover {
+            background: white;
+            color: #667eea;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 80px 20px;
+            background: #f9fafb;
+        }
+
+        .features h2 {
+            font-size: 36px;
+            text-align: center;
+            margin-bottom: 50px;
+            color: #1f2937;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        }
+
+        .feature-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+
+        .feature-card h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #1f2937;
+        }
+
+        .feature-card p {
+            color: #6b7280;
+            font-size: 15px;
+        }
+
+        /* About Section */
+        .about {
+            padding: 80px 20px;
+        }
+
+        .about .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+        }
+
+        .about h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: #1f2937;
+        }
+
+        .about p {
+            color: #6b7280;
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+
+        /* Tech Stack Section */
+        .tech-stack {
+            padding: 80px 20px;
+            background: #f9fafb;
+        }
+
+        .tech-stack h2 {
+            font-size: 36px;
+            text-align: center;
+            margin-bottom: 50px;
+            color: #1f2937;
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .tech-item {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .tech-item h4 {
+            color: #2563eb;
+            margin-bottom: 10px;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .cta-section h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        .cta-section p {
+            font-size: 18px;
+            margin-bottom: 30px;
+            opacity: 0.95;
+        }
+
+        /* Footer */
+        footer {
+            background: #1f2937;
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        footer p {
+            opacity: 0.8;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 32px;
+            }
+
+            .hero p {
+                font-size: 16px;
+            }
+
+            nav ul {
+                gap: 15px;
+                font-size: 14px;
+            }
+
+            .about .container {
+                grid-template-columns: 1fr;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="container">
+            <div class="logo">Better Future Tech ERP</div>
+            <ul>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#tech">Tech Stack</a></li>
+                <li><a href="https://github.com/betterfuturetech/erp" target="_blank">GitHub</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Enterprise Resource Planning for the Future</h1>
+            <p>Streamline your business operations with our comprehensive ERP solution built for modern enterprises</p>
+            <div class="cta-buttons">
+                <button class="btn btn-primary">Get Started</button>
+                <a href="https://github.com/betterfuturetech/erp" class="btn btn-secondary">View on GitHub</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <h2>Powerful Features</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Analytics & Reports</h3>
+                    <p>Real-time analytics and customizable reports to track your business performance and make data-driven decisions.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">👥</div>
+                    <h3>User Management</h3>
+                    <p>Comprehensive user and role management system with granular permission controls for your organization.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3>Security First</h3>
+                    <p>Enterprise-grade security with encryption, authentication, and compliance with industry standards.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚙️</div>
+                    <h3>Integration Ready</h3>
+                    <p>Easy integration with third-party applications and services through robust APIs.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3>Responsive Design</h3>
+                    <p>Access your ERP system from any device with our fully responsive and mobile-friendly interface.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🚀</div>
+                    <h3>High Performance</h3>
+                    <p>Built for scale with optimized performance to handle large datasets and concurrent users.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about" id="about">
+        <div class="container">
+            <div>
+                <h2>About Our ERP Solution</h2>
+                <p>Better Future Tech's ERP system is designed from the ground up to meet the needs of modern enterprises. We understand the complexities of managing resources, operations, and business processes across multiple departments.</p>
+                <p>Our solution provides an integrated platform that connects all aspects of your business, from finance and HR to supply chain and inventory management.</p>
+                <p>Whether you're a growing startup or an established enterprise, our ERP system scales with your business needs and provides the tools you need to succeed.</p>
+            </div>
+            <div>
+                <h3 style="margin-bottom: 20px; color: #1f2937;">Why Choose Us?</h3>
+                <ul style="list-style: none; color: #6b7280;">
+                    <li style="margin-bottom: 15px;">✓ Customizable modules for your specific needs</li>
+                    <li style="margin-bottom: 15px;">✓ Dedicated support and training</li>
+                    <li style="margin-bottom: 15px;">✓ Regular updates and new features</li>
+                    <li style="margin-bottom: 15px;">✓ Open-source and community-driven</li>
+                    <li style="margin-bottom: 15px;">✓ Transparent pricing and no hidden fees</li>
+                    <li style="margin-bottom: 15px;">✓ Industry-standard compliance</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tech Stack Section -->
+    <section class="tech-stack" id="tech">
+        <div class="container">
+            <h2>Built With Modern Technology</h2>
+            <div class="tech-grid">
+                <div class="tech-item">
+                    <h4>Frontend</h4>
+                    <p>React, Vue.js, or similar modern frameworks</p>
+                </div>
+                <div class="tech-item">
+                    <h4>Backend</h4>
+                    <p>Node.js, Python, or Java for robust API services</p>
+                </div>
+                <div class="tech-item">
+                    <h4>Database</h4>
+                    <p>PostgreSQL or MySQL for reliable data management</p>
+                </div>
+                <div class="tech-item">
+                    <h4>Cloud</h4>
+                    <p>AWS, GCP, or Azure for scalable infrastructure</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <h2>Ready to Transform Your Business?</h2>
+            <p>Join organizations worldwide using our ERP solution to streamline operations and drive growth</p>
+            <a href="https://github.com/betterfuturetech/erp" class="btn btn-primary">Explore the Project</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Better Future Tech. All rights reserved.</p>
+            <p>
+                <a href="https://github.com/betterfuturetech/erp" style="color: #667eea; text-decoration: none;">GitHub</a> | 
+                <a href="#" style="color: #667eea; text-decoration: none;">Documentation</a> | 
+                <a href="#" style="color: #667eea; text-decoration: none;">Contact</a>
+            </p>
+        </div>
+    </footer>
+</body>
+</html>
