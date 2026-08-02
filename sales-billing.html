@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sales Billing & Invoice Generator</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         :root {
             --primary: #2563eb;
@@ -393,7 +392,7 @@
                 <input type="date" id="filterDate" style="width: auto; display: inline-block;">
             </div>
             <button onclick="downloadExcel()" class="btn btn-success">Download Excel (.xlsx)</button>
-            <button onclick="clearAllData()" class="btn btn-danger" style="background-color: #6b7280;">Reset All</button>
+            <button onclick="resetAllData()" class="btn btn-danger" style="background-color: #6b7280;">Reset All</button>
         </div>
         
         <div style="overflow-x: auto;">
@@ -422,31 +421,35 @@
 </div>
 
 <script>
-    // State Management
-    let salesRecords = JSON.parse(localStorage.getItem('salesRecords')) || [];
-    
+    // State
+    let salesRecords = [];
+
     // Initialize
     document.addEventListener('DOMContentLoaded', () => {
-        // Set default date to today
         const today = new Date().toISOString().split('T')[0];
         document.getElementById('invoiceDate').value = today;
         document.getElementById('filterDate').value = today;
-        
-        // Generate random Invoice ID if empty
-        if(!localStorage.getItem('lastInvNo')) {
-            localStorage.setItem('lastInvNo', '1000');
-        }
-        
-        renderTable();
-        updateStats();
+
+        // Set a default invoice number if empty
+        document.getElementById('invoiceNo').value = 'INV-' + Math.floor(1000 + Math.random() * 9000);
+
+        fetchRecords(today);
         setupFormListeners();
     });
 
-    // Form Listeners for Live Preview
     function setupFormListeners() {
         const inputs = ['invoiceNo', 'invoiceDate', 'customerName', 'productName', 'quantity', 'unitPrice', 'taxRate', 'discount', 'notes'];
         inputs.forEach(id => {
             document.getElementById(id).addEventListener('input', updatePreview);
+        });
+
+        document.getElementById('filterDate').addEventListener('change', () => {
+            fetchRecords(document.getElementById('filterDate').value);
+        });
+
+        document.getElementById('billingForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            await submitForm();
         });
     }
 
@@ -465,7 +468,6 @@
         const taxAmount = subtotal * (taxRate / 100);
         const grandTotal = subtotal + taxAmount - discount;
 
-        // Update DOM
         document.getElementById('prevInvNo').textContent = invoiceNo;
         document.getElementById('prevDate').textContent = date;
         document.getElementById('prevCustomer').textContent = customer;
@@ -480,7 +482,6 @@
         document.getElementById('prevGrandTotal').textContent = '$' + grandTotal.toFixed(2);
         document.getElementById('prevNotes').textContent = notes;
 
-        // Toggle visibility
         if(invoiceNo !== '---' || customer !== '---') {
             document.getElementById('emptyPreview').style.display = 'none';
             document.getElementById('invoicePreview').style.display = 'block';
@@ -490,21 +491,35 @@
         }
     }
 
-    // Handle Form Submit
-    document.getElementById('billingForm').addEventListener('submit', function(e) {
-        e.preventDefault();
+    async function fetchRecords(date) {
+        try {
+            const res = await fetch(`/api/records?date=${encodeURIComponent(date)}`);
+            if (res.ok) {
+                salesRecords = await res.json();
+            } else {
+                salesRecords = [];
+            }
+            renderTable();
+            updateStats();
+        } catch (err) {
+            console.error('Failed to fetch records', err);
+            salesRecords = [];
+            renderTable();
+            updateStats();
+        }
+    }
 
+    async function submitForm() {
         const qty = parseFloat(document.getElementById('quantity').value);
         const price = parseFloat(document.getElementById('unitPrice').value);
         const taxRate = parseFloat(document.getElementById('taxRate').value) || 0;
         const discount = parseFloat(document.getElementById('discount').value) || 0;
-        
+
         const subtotal = qty * price;
         const taxAmount = subtotal * (taxRate / 100);
         const grandTotal = subtotal + taxAmount - discount;
 
-        const record = {
-            id: Date.now(),
+        const payload = {
             date: document.getElementById('invoiceDate').value,
             invoiceNo: document.getElementById('invoiceNo').value,
             customer: document.getElementById('customerName').value,
@@ -518,158 +533,113 @@
             notes: document.getElementById('notes').value
         };
 
-        salesRecords.push(record);
-        saveData();
-        renderTable();
-        updateStats();
-        
-        // Reset Form but keep date
-        const currentDate = document.getElementById('invoiceDate').value;
-        const lastInv = parseInt(localStorage.getItem('lastInvNo')) || 1000;
-        const nextInv = 'INV-' + (lastInv + 1);
-        
-        this.reset();
-        document.getElementById('invoiceDate').value = currentDate;
-        document.getElementById('invoiceNo').value = nextInv;
-        localStorage.setItem('lastInvNo', (lastInv + 1).toString());
-        
-        updatePreview();
-        alert('Invoice saved successfully!');
-    });
+        try {
+            const res = await fetch('/api/records', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            if (res.ok) {
+                await fetchRecords(document.getElementById('filterDate').value);
 
-    function saveData() {
-        localStorage.setItem('salesRecords', JSON.stringify(salesRecords));
+                // Reset invoice number and form while keeping date
+                const currentDate = document.getElementById('invoiceDate').value;
+                this.reset && this.reset();
+                document.getElementById('invoiceDate').value = currentDate;
+                document.getElementById('invoiceNo').value = 'INV-' + Math.floor(1000 + Math.random() * 9000);
+                updatePreview();
+                alert('Invoice saved successfully!');
+            } else {
+                const err = await res.json();
+                alert('Failed to save invoice: ' + (err.error || res.statusText));
+            }
+        } catch (err) {
+            console.error(err);
+            alert('Network error saving invoice');
+        }
     }
 
     function renderTable() {
         const tbody = document.getElementById('recordsBody');
         const filterDate = document.getElementById('filterDate').value;
         const noRecordsMsg = document.getElementById('noRecordsMsg');
-        
+
         tbody.innerHTML = '';
-        
-        // Filter records by selected date
-        const filteredRecords = salesRecords.filter(r => r.date === filterDate);
-        
-        if (filteredRecords.length === 0) {
+
+        if (salesRecords.length === 0) {
             noRecordsMsg.style.display = 'block';
         } else {
             noRecordsMsg.style.display = 'none';
-            // Sort by newest first
-            filteredRecords.sort((a, b) => b.id - a.id).forEach(record => {
-                const row = `
-                    <tr>
-                        <td>${record.date}</td>
-                        <td>${record.invoiceNo}</td>
-                        <td>${record.customer}</td>
-                        <td>${record.item}</td>
-                        <td>${record.quantity}</td>
-                        <td>$${record.unitPrice.toFixed(2)}</td>
-                        <td>${record.taxRate}%</td>
-                        <td>$${record.discount.toFixed(2)}</td>
-                        <td><strong>$${record.grandTotal.toFixed(2)}</strong></td>
-                        <td>
-                            <button onclick="deleteRecord(${record.id})" class="btn btn-danger">Delete</button>
-                        </td>
-                    </tr>
+            salesRecords.forEach(record => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${record.date}</td>
+                    <td>${record.invoiceNo}</td>
+                    <td>${record.customer}</td>
+                    <td>${record.item}</td>
+                    <td>${record.quantity}</td>
+                    <td>$${Number(record.unitPrice).toFixed(2)}</td>
+                    <td>${record.taxRate}%</td>
+                    <td>$${Number(record.discount).toFixed(2)}</td>
+                    <td><strong>$${Number(record.grandTotal).toFixed(2)}</strong></td>
+                    <td><button class="btn btn-danger" data-id="${record.id}">Delete</button></td>
                 `;
-                tbody.innerHTML += row;
+                row.querySelector('button')?.addEventListener('click', () => deleteRecord(record.id));
+                tbody.appendChild(row);
             });
         }
     }
 
-    document.getElementById('filterDate').addEventListener('change', () => {
-        renderTable();
-        updateStats();
-    });
-
-    function deleteRecord(id) {
-        if(confirm('Are you sure you want to delete this record?')) {
-            salesRecords = salesRecords.filter(r => r.id !== id);
-            saveData();
-            renderTable();
-            updateStats();
+    async function deleteRecord(id) {
+        if (!confirm('Are you sure you want to delete this record?')) return;
+        try {
+            const res = await fetch(`/api/records/${id}`, { method: 'DELETE' });
+            if (res.ok) {
+                await fetchRecords(document.getElementById('filterDate').value);
+            } else {
+                alert('Failed to delete record');
+            }
+        } catch (err) {
+            console.error(err);
+            alert('Network error deleting record');
         }
     }
 
-    function clearAllData() {
-        if(confirm('WARNING: This will delete ALL records permanently. Continue?')) {
-            salesRecords = [];
-            saveData();
-            renderTable();
-            updateStats();
+    async function resetAllData() {
+        if (!confirm('WARNING: This will delete ALL records permanently. Continue?')) return;
+        try {
+            const res = await fetch('/api/records?confirm=true', { method: 'DELETE' });
+            if (res.ok) {
+                await fetchRecords(document.getElementById('filterDate').value);
+                updateStats();
+            } else {
+                alert('Failed to clear data');
+            }
+        } catch (err) {
+            console.error(err);
+            alert('Network error clearing data');
         }
     }
 
-    function updateStats() {
-        const filterDate = document.getElementById('filterDate').value;
-        
-        // Today's stats
-        const today = new Date().toISOString().split('T')[0];
-        const todayRecords = salesRecords.filter(r => r.date === today);
-        const todayTotal = todayRecords.reduce((sum, r) => sum + r.grandTotal, 0);
-        
-        // Filtered stats (for the table view)
-        const filteredRecords = salesRecords.filter(r => r.date === filterDate);
-        
-        document.getElementById('todayCount').textContent = todayRecords.length;
-        document.getElementById('todayRevenue').textContent = '$' + todayTotal.toFixed(2);
-        document.getElementById('totalRecords').textContent = salesRecords.length;
+    async function updateStats() {
+        try {
+            const filterDate = document.getElementById('filterDate').value;
+            const res = await fetch(`/api/stats?date=${encodeURIComponent(filterDate)}`);
+            if (res.ok) {
+                const s = await res.json();
+                document.getElementById('todayCount').textContent = s.todayCount;
+                document.getElementById('todayRevenue').textContent = '$' + Number(s.todayTotal).toFixed(2);
+                document.getElementById('totalRecords').textContent = s.totalRecords;
+            }
+        } catch (err) {
+            console.error('Failed to update stats', err);
+        }
     }
 
     function downloadExcel() {
         const filterDate = document.getElementById('filterDate').value;
-        const filteredRecords = salesRecords.filter(r => r.date === filterDate);
-        
-        if (filteredRecords.length === 0) {
-            alert('No records to download for the selected date.');
-            return;
-        }
-
-        // Prepare data for Excel
-        const excelData = filteredRecords.map(r => ({
-            "Date": r.date,
-            "Invoice No": r.invoiceNo,
-            "Customer Name": r.customer,
-            "Product/Service": r.item,
-            "Quantity": r.quantity,
-            "Unit Price": r.unitPrice,
-            "Subtotal": (r.quantity * r.unitPrice),
-            "Tax Rate (%)": r.taxRate,
-            "Tax Amount": r.taxAmount,
-            "Discount": r.discount,
-            "Grand Total": r.grandTotal,
-            "Notes": r.notes
-        }));
-
-        // Create workbook
-        const wb = XLSX.utils.book_new();
-        const ws = XLSX.utils.json_to_sheet(excelData);
-        
-        // Set column widths
-        const wscols = [
-            {wch: 12}, // Date
-            {wch: 15}, // Inv No
-            {wch: 20}, // Customer
-            {wch: 20}, // Item
-            {wch: 8},  // Qty
-            {wch: 10}, // Price
-            {wch: 10}, // Subtotal
-            {wch: 10}, // Tax %
-            {wch: 10}, // Tax Amt
-            {wch: 10}, // Discount
-            {wch: 12}, // Total
-            {wch: 30}  // Notes
-        ];
-        ws['!cols'] = wscols;
-
-        XLSX.utils.book_append_sheet(wb, ws, "Sales Report");
-        
-        // Generate filename with date
-        const filename = `Sales_Report_${filterDate}.xlsx`;
-        
-        // Download
-        XLSX.writeFile(wb, filename);
+        // Trigger server export
+        window.location = `/api/export?date=${encodeURIComponent(filterDate)}`;
     }
 </script>
 
