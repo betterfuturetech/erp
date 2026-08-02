@@ -5,7 +5,7 @@ const Database = require('better-sqlite3');
 const ExcelJS = require('exceljs');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 
 // Ensure data directory
 const dataDir = path.join(__dirname, 'data');
