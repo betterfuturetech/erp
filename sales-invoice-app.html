@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Invoice App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+        }
+        
+        body {
+            background: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            border-radius: 0 0 20px 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+        
+        .subtitle {
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+        
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 0.85rem;
+            color: #666;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+        
+        @media (min-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+        }
+        
+        .card-title {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: #333;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #555;
+            font-size: 0.9rem;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            width: 100%;
+            margin-top: 10px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            margin-top: 10px;
+        }
+        
+        .btn-success {
+            background: #28a745;
+        }
+        
+        .btn-danger {
+            background: #dc3545;
+            margin-top: 10px;
+        }
+        
+        .records-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            overflow-x: auto;
+            display: block;
+        }
+        
+        .records-table thead {
+            background: #f8f9fa;
+        }
+        
+        .records-table th,
+        .records-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 0.9rem;
+        }
+        
+        .records-table th {
+            font-weight: 600;
+            color: #555;
+        }
+        
+        .records-table tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .action-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            margin-right: 5px;
+        }
+        
+        .edit-btn {
+            background: #ffc107;
+            color: #333;
+        }
+        
+        .delete-btn {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .export-section {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #f0f0f0;
+        }
+        
+        .date-filter {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .date-filter input {
+            flex: 1;
+            min-width: 150px;
+        }
+        
+        .no-records {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+        
+        .invoice-preview {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .invoice-preview h3 {
+            margin-bottom: 15px;
+            color: #667eea;
+        }
+        
+        .preview-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px dashed #ddd;
+        }
+        
+        .preview-row:last-child {
+            border-bottom: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: #667eea;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            .records-table {
+                font-size: 0.8rem;
+            }
+            
+            .records-table th,
+            .records-table td {
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>📄 Sales Invoice App</h1>
+            <p class="subtitle">Create invoices & export daily records</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Statistics -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value" id="todayCount">0</div>
+                <div class="stat-label">Invoices Today</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="todayRevenue">$0</div>
+                <div class="stat-label">Today's Revenue</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="totalRecords">0</div>
+                <div class="stat-label">Total Records</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="totalRevenue">$0</div>
+                <div class="stat-label">Total Revenue</div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <!-- Invoice Form -->
+            <div class="card">
+                <h2 class="card-title">Create New Invoice</h2>
+                <form id="invoiceForm">
+                    <input type="hidden" id="editIndex" value="-1">
+                    
+                    <div class="form-group">
+                        <label for="invoiceDate">Date *</label>
+                        <input type="date" id="invoiceDate" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="invoiceNumber">Invoice Number *</label>
+                        <input type="text" id="invoiceNumber" placeholder="INV-001" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="customerName">Customer Name *</label>
+                        <input type="text" id="customerName" placeholder="Enter customer name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="customerEmail">Customer Email</label>
+                        <input type="email" id="customerEmail" placeholder="customer@example.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="productName">Product/Service *</label>
+                        <input type="text" id="productName" placeholder="Enter product name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="quantity">Quantity *</label>
+                        <input type="number" id="quantity" placeholder="1" min="1" value="1" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="unitPrice">Unit Price ($) *</label>
+                        <input type="number" id="unitPrice" placeholder="0.00" min="0" step="0.01" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="taxRate">Tax Rate (%)</label>
+                        <input type="number" id="taxRate" placeholder="0" min="0" max="100" step="0.1" value="0">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="discount">Discount ($)</label>
+                        <input type="number" id="discount" placeholder="0.00" min="0" step="0.01" value="0">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="notes">Notes</label>
+                        <textarea id="notes" rows="3" placeholder="Additional notes..."></textarea>
+                    </div>
+
+                    <button type="submit" class="btn" id="submitBtn">💾 Save Invoice</button>
+                    <button type="button" class="btn btn-secondary" id="cancelBtn" style="display:none;">Cancel Edit</button>
+                </form>
+
+                <div class="invoice-preview" id="invoicePreview">
+                    <h3>Live Preview</h3>
+                    <div class="preview-row">
+                        <span>Subtotal:</span>
+                        <span id="previewSubtotal">$0.00</span>
+                    </div>
+                    <div class="preview-row">
+                        <span>Tax:</span>
+                        <span id="previewTax">$0.00</span>
+                    </div>
+                    <div class="preview-row">
+                        <span>Discount:</span>
+                        <span id="previewDiscount">-$0.00</span>
+                    </div>
+                    <div class="preview-row">
+                        <span>Total:</span>
+                        <span id="previewTotal">$0.00</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Records & Export -->
+            <div class="card">
+                <h2 class="card-title">Sales Records</h2>
+                
+                <div class="export-section">
+                    <div class="date-filter">
+                        <input type="date" id="filterDate" placeholder="Select date">
+                        <button class="btn btn-success" onclick="exportToCSV()">📥 Export CSV</button>
+                        <button class="btn btn-success" onclick="exportToExcel()">📊 Export Excel</button>
+                    </div>
+                    <button class="btn btn-danger" onclick="clearAllData()">🗑️ Clear All Data</button>
+                </div>
+
+                <div style="overflow-x:auto;">
+                    <table class="records-table" id="recordsTable">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Invoice #</th>
+                                <th>Customer</th>
+                                <th>Product</th>
+                                <th>Qty</th>
+                                <th>Total</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recordsBody">
+                            <tr>
+                                <td colspan="7" class="no-records">No records yet. Create your first invoice!</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize data
+        let invoices = JSON.parse(localStorage.getItem('salesInvoices')) || [];
+        
+        // Set default date to today
+        document.getElementById('invoiceDate').valueAsDate = new Date();
+        
+        // Generate initial invoice number
+        updateInvoiceNumber();
+        
+        // Event listeners
+        document.getElementById('invoiceForm').addEventListener('submit', saveInvoice);
+        document.getElementById('cancelBtn').addEventListener('click', cancelEdit);
+        
+        // Live preview updates
+        ['quantity', 'unitPrice', 'taxRate', 'discount'].forEach(id => {
+            document.getElementById(id).addEventListener('input', updatePreview);
+        });
+        
+        // Filter date change
+        document.getElementById('filterDate').addEventListener('change', renderRecords);
+        
+        // Initial render
+        updateStats();
+        renderRecords();
+        updatePreview();
+        
+        function updateInvoiceNumber() {
+            const nextNum = invoices.length + 1;
+            document.getElementById('invoiceNumber').value = `INV-${String(nextNum).padStart(3, '0')}`;
+        }
+        
+        function updatePreview() {
+            const qty = parseFloat(document.getElementById('quantity').value) || 0;
+            const price = parseFloat(document.getElementById('unitPrice').value) || 0;
+            const taxRate = parseFloat(document.getElementById('taxRate').value) || 0;
+            const discount = parseFloat(document.getElementById('discount').value) || 0;
+            
+            const subtotal = qty * price;
+            const tax = subtotal * (taxRate / 100);
+            const total = subtotal + tax - discount;
+            
+            document.getElementById('previewSubtotal').textContent = `$${subtotal.toFixed(2)}`;
+            document.getElementById('previewTax').textContent = `$${tax.toFixed(2)}`;
+            document.getElementById('previewDiscount').textContent = `-$${discount.toFixed(2)}`;
+            document.getElementById('previewTotal').textContent = `$${Math.max(0, total).toFixed(2)}`;
+        }
+        
+        function saveInvoice(e) {
+            e.preventDefault();
+            
+            const editIndex = parseInt(document.getElementById('editIndex').value);
+            
+            const invoice = {
+                date: document.getElementById('invoiceDate').value,
+                invoiceNumber: document.getElementById('invoiceNumber').value,
+                customerName: document.getElementById('customerName').value,
+                customerEmail: document.getElementById('customerEmail').value,
+                productName: document.getElementById('productName').value,
+                quantity: parseFloat(document.getElementById('quantity').value),
+                unitPrice: parseFloat(document.getElementById('unitPrice').value),
+                taxRate: parseFloat(document.getElementById('taxRate').value) || 0,
+                discount: parseFloat(document.getElementById('discount').value) || 0,
+                notes: document.getElementById('notes').value,
+                createdAt: new Date().toISOString()
+            };
+            
+            // Calculate totals
+            invoice.subtotal = invoice.quantity * invoice.unitPrice;
+            invoice.tax = invoice.subtotal * (invoice.taxRate / 100);
+            invoice.total = Math.max(0, invoice.subtotal + invoice.tax - invoice.discount);
+            
+            if (editIndex >= 0 && editIndex < invoices.length) {
+                invoices[editIndex] = invoice;
+            } else {
+                invoices.push(invoice);
+            }
+            
+            localStorage.setItem('salesInvoices', JSON.stringify(invoices));
+            
+            // Reset form
+            resetForm();
+            updateInvoiceNumber();
+            updateStats();
+            renderRecords();
+            
+            alert('Invoice saved successfully!');
+        }
+        
+        function editInvoice(index) {
+            const invoice = invoices[index];
+            
+            document.getElementById('editIndex').value = index;
+            document.getElementById('invoiceDate').value = invoice.date;
+            document.getElementById('invoiceNumber').value = invoice.invoiceNumber;
+            document.getElementById('customerName').value = invoice.customerName;
+            document.getElementById('customerEmail').value = invoice.customerEmail || '';
+            document.getElementById('productName').value = invoice.productName;
+            document.getElementById('quantity').value = invoice.quantity;
+            document.getElementById('unitPrice').value = invoice.unitPrice;
+            document.getElementById('taxRate').value = invoice.taxRate;
+            document.getElementById('discount').value = invoice.discount;
+            document.getElementById('notes').value = invoice.notes || '';
+            
+            document.getElementById('submitBtn').textContent = '✏️ Update Invoice';
+            document.getElementById('cancelBtn').style.display = 'block';
+            
+            updatePreview();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        function deleteInvoice(index) {
+            if (confirm('Are you sure you want to delete this invoice?')) {
+                invoices.splice(index, 1);
+                localStorage.setItem('salesInvoices', JSON.stringify(invoices));
+                updateStats();
+                renderRecords();
+            }
+        }
+        
+        function cancelEdit() {
+            resetForm();
+            updateInvoiceNumber();
+        }
+        
+        function resetForm() {
+            document.getElementById('invoiceForm').reset();
+            document.getElementById('editIndex').value = -1;
+            document.getElementById('invoiceDate').valueAsDate = new Date();
+            document.getElementById('submitBtn').textContent = '💾 Save Invoice';
+            document.getElementById('cancelBtn').style.display = 'none';
+            updatePreview();
+        }
+        
+        function updateStats() {
+            const today = new Date().toISOString().split('T')[0];
+            
+            const todayInvoices = invoices.filter(inv => inv.date === today);
+            const todayCount = todayInvoices.length;
+            const todayRevenue = todayInvoices.reduce((sum, inv) => sum + inv.total, 0);
+            
+            const totalCount = invoices.length;
+            const totalRevenue = invoices.reduce((sum, inv) => sum + inv.total, 0);
+            
+            document.getElementById('todayCount').textContent = todayCount;
+            document.getElementById('todayRevenue').textContent = `$${todayRevenue.toFixed(2)}`;
+            document.getElementById('totalRecords').textContent = totalCount;
+            document.getElementById('totalRevenue').textContent = `$${totalRevenue.toFixed(2)}`;
+        }
+        
+        function renderRecords() {
+            const filterDate = document.getElementById('filterDate').value;
+            const tbody = document.getElementById('recordsBody');
+            
+            let filteredInvoices = invoices;
+            if (filterDate) {
+                filteredInvoices = invoices.filter(inv => inv.date === filterDate);
+            }
+            
+            // Sort by date descending
+            filteredInvoices.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            
+            if (filteredInvoices.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="no-records">No records found.</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = filteredInvoices.map((inv, index) => {
+                const originalIndex = invoices.indexOf(inv);
+                return `
+                    <tr>
+                        <td>${inv.date}</td>
+                        <td>${inv.invoiceNumber}</td>
+                        <td>${inv.customerName}</td>
+                        <td>${inv.productName}</td>
+                        <td>${inv.quantity}</td>
+                        <td>$${inv.total.toFixed(2)}</td>
+                        <td>
+                            <button class="action-btn edit-btn" onclick="editInvoice(${originalIndex})">✏️</button>
+                            <button class="action-btn delete-btn" onclick="deleteInvoice(${originalIndex})">🗑️</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+        
+        function getFilteredInvoices() {
+            const filterDate = document.getElementById('filterDate').value;
+            if (filterDate) {
+                return invoices.filter(inv => inv.date === filterDate);
+            }
+            return invoices;
+        }
+        
+        function exportToCSV() {
+            const data = getFilteredInvoices();
+            if (data.length === 0) {
+                alert('No records to export!');
+                return;
+            }
+            
+            const headers = ['Date', 'Invoice Number', 'Customer Name', 'Customer Email', 'Product', 'Quantity', 'Unit Price', 'Subtotal', 'Tax Rate', 'Tax', 'Discount', 'Total', 'Notes'];
+            const rows = data.map(inv => [
+                inv.date,
+                inv.invoiceNumber,
+                inv.customerName,
+                inv.customerEmail || '',
+                inv.productName,
+                inv.quantity,
+                inv.unitPrice,
+                inv.subtotal,
+                inv.taxRate,
+                inv.tax,
+                inv.discount,
+                inv.total,
+                inv.notes || ''
+            ]);
+            
+            const csvContent = [
+                headers.join(','),
+                ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
+            ].join('\n');
+            
+            downloadFile(csvContent, 'sales_records.csv', 'text/csv');
+        }
+        
+        function exportToExcel() {
+            const data = getFilteredInvoices();
+            if (data.length === 0) {
+                alert('No records to export!');
+                return;
+            }
+            
+            const headers = ['Date', 'Invoice Number', 'Customer Name', 'Customer Email', 'Product', 'Quantity', 'Unit Price', 'Subtotal', 'Tax Rate (%)', 'Tax Amount', 'Discount', 'Total', 'Notes'];
+            
+            let xlsContent = `<table><thead><tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr></thead><tbody>`;
+            
+            data.forEach(inv => {
+                xlsContent += `<tr>
+                    <td>${inv.date}</td>
+                    <td>${inv.invoiceNumber}</td>
+                    <td>${inv.customerName}</td>
+                    <td>${inv.customerEmail || ''}</td>
+                    <td>${inv.productName}</td>
+                    <td>${inv.quantity}</td>
+                    <td>${inv.unitPrice}</td>
+                    <td>${inv.subtotal}</td>
+                    <td>${inv.taxRate}</td>
+                    <td>${inv.tax}</td>
+                    <td>${inv.discount}</td>
+                    <td>${inv.total}</td>
+                    <td>${inv.notes || ''}</td>
+                </tr>`;
+            });
+            
+            xlsContent += '</tbody></table>';
+            
+            const fullHTML = `
+                <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
+                <head><meta charset="UTF-8"></head>
+                <body>${xlsContent}</body>
+                </html>
+            `;
+            
+            downloadFile(fullHTML, 'sales_records.xls', 'application/vnd.ms-excel');
+        }
+        
+        function downloadFile(content, filename, mimeType) {
+            const blob = new Blob([content], { type: mimeType });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+        
+        function clearAllData() {
+            if (confirm('⚠️ WARNING: This will delete ALL invoices permanently! Are you sure?')) {
+                if (confirm('Really sure? This cannot be undone.')) {
+                    invoices = [];
+                    localStorage.removeItem('salesInvoices');
+                    resetForm();
+                    updateInvoiceNumber();
+                    updateStats();
+                    renderRecords();
+                    alert('All data cleared.');
+                }
+            }
+        }
+    </script>
+</body>
+</html>
